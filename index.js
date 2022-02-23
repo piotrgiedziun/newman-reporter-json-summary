@@ -22,7 +22,7 @@ module.exports = function(newman, options) {
         if (err) { return; }
 
         newman.exports.push({
-            name: 'newman-reporter-json-summary',
+            name: '@npm_identt/newman-reporter-log',
             default: 'summary.log',
             path:  options.summaryJsonExport,
             content: createSummary(data.summary).join("\n")
