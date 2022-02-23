@@ -1,60 +1,20 @@
-var _ = require('lodash');
-
-/*
-    JSON Reporter that reports just the Summary Info
-    Collection.Info.Name
-    Collection.Info.Id
-    Run.Stats.Requests.*
-    Run.Stats.Assertions.*
-    Run.Timings.*
-    Run.Failures[n].Parent.Name
-    Run.Failures[n].Parent.Id
-    Run.Failures[n].Source.Name
-    Run.Failures[n].Source.Id
-    Run.Failures[n].Error.Message
-    Run.Failures[n].Error.Test
- */
+function requestUrlToString(r) {
+    return `${r.protocol}://${r.host.join(".")}$/${r.path.join("/")}`;
+}
 
 function createSummary(summary) {
-    
-    // Just pull out the miminum parts for each failure
-    var failures = [];
-    summary.run.failures.forEach(function(failure) {
-        failures.push({
-            'Parent': {
-                'Name': failure.parent.name,
-                'Id' : failure.parent.id
-            },
-            'Source': {
-                'Name': failure.source.name,
-                'Id' : failure.source.id
-            },
-            'Error': {
-                'Message': failure.error.message,
-                'Test' : failure.error.test
-            }
-        });
-    });
-
-    // Build main object with just the bits needed plus the slimmed down failures
-    var result = {};
-    Object.assign(result, {
-        'Collection': {
-            'Info': {
-                'Name': summary.collection.name,
-                'Id': summary.collection.id
-            }
-        },
-        'Run': {
-            'Stats': {
-                "Requests" : summary.run.stats.requests,
-                "Assertions" : summary.run.stats.assertions
-            },
-            'Failures': failures,
-            'Timings' : summary.run.timings
-        }
-    });
-    return result;
+    return summary.run.executions.map((e) => {
+        return JSON.stringify({
+            "type": "newman_test",
+            "collection_name": summary.collection.name,
+            "name": e.item.name,
+            "url": requestUrlToString(e.item.request.url),
+            "method": e.item.request.method,
+            "responseTime": e.response.responseTime,
+            "responseCode": e.response.code,
+            "error": e.assertions.map(a => a.error).some(x => x)
+        })
+    })
 }
 
 module.exports = function(newman, options) {
@@ -63,9 +23,9 @@ module.exports = function(newman, options) {
 
         newman.exports.push({
             name: 'newman-reporter-json-summary',
-            default: 'summary.json',
+            default: 'summary.log',
             path:  options.summaryJsonExport,
-            content: JSON.stringify(createSummary(data.summary))
+            content: createSummary(data.summary).join("\n")
         });
     });
 };
