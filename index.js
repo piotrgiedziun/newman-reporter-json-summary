@@ -1,5 +1,5 @@
 function requestUrlToString(r) {
-    return `${r.protocol}://${r.host.join(".")}$/${r.path.join("/")}`;
+    return `${r.protocol}://${r.host.join(".")}/${r.path.join("/")}`;
 }
 
 function createSummary(summary) {
@@ -7,11 +7,11 @@ function createSummary(summary) {
         return JSON.stringify({
             "type": "newman_test",
             "collection_name": summary.collection.name,
-            "name": e.item.name,
+            "name": e.item?.name,
             "url": requestUrlToString(e.item.request.url),
-            "method": e.item.request.method,
-            "responseTime": e.response.responseTime,
-            "responseCode": e.response.code,
+            "method": e.item?.request?.method,
+            "responseTime": e.response?.responseTime,
+            "responseCode": e.response?.code,
             "error": e.assertions.map(a => a.error).some(x => x)
         })
     })

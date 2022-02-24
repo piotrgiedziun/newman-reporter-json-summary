@@ -1,6 +1,6 @@
 {
   "name": "@npm_identt/newman-reporter-log",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A custom Newman Reporter",
   "main": "index.js",
   "scripts": {
