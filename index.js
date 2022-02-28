@@ -14,7 +14,6 @@ function createSummary(summary) {
 }
 
 module.exports = function(newman, options) {
-    console.log(options)
     newman.on('beforeDone', function(err, data) {
         if (err) { return; }
 
@@ -22,7 +21,7 @@ module.exports = function(newman, options) {
             name: '@npm_identt/newman-reporter-log',
             default: 'summary.log',
             path:  options.logExport,
-            content: createSummary(data.summary).join("\n")
+            content: `${createSummary(data.summary).join("\n")}\n`
         });
     });
 };

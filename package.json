@@ -1,6 +1,6 @@
 {
   "name": "@npm_identt/newman-reporter-log",
-  "version": "2.0.3",
+  "version": "2.0.5",
   "description": "A custom Newman Reporter",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,5 @@
   "repository": "github:piotrgiedziun/newman-reporter-json-summary",
   "author": "piotr.giedziun@identt.pl",
   "license": "MIT",
-  "dependencies": {
-    "newman": ">=4.6.1"
-  }
+  "dependencies": {}
 }
