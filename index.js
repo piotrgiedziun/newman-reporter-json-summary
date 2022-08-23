@@ -1,5 +1,6 @@
 function createSummary(summary) {
-    return summary.run.executions.map((e) => {
+    return [...new Map(summary.run.executions.map(item =>
+        [item.id, item])).values()].map((e) => {
         return JSON.stringify({
             "type": "newman_test",
             "collection_name": summary.collection.name,
